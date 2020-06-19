@@ -1,8 +1,10 @@
 package com.justlearn.justlearn;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.justlearn.justlearn.ui.login.LoginActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -25,6 +27,19 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+        if (checkIfTokenExists())
+        {
+            Intent login_intent = new Intent(this, LoginActivity.class);
+            startActivity(login_intent);
+            this.finish();
+        }
+
+    }
+
+    private boolean checkIfTokenExists()
+    {
+        return true;
     }
 
 }
