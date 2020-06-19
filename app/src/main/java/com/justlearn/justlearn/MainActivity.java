@@ -3,9 +3,13 @@ package com.justlearn.justlearn;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.justlearn.justlearn.ui.login.LoginActivity;
+import com.justlearn.justlearn.utils.Debugger;
 import com.justlearn.justlearn.utils.UserSession;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,18 +37,48 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
         context = this;
 
-        if (checkIfTokenExists())
+        checkIfTokenExists();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id)
+        {
+            case R.id.action_logout : logout(); break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void checkIfTokenExists()
+    {
+        Debugger.logD(UserSession.getToken(context).length() + " Length");
+        if (UserSession.getToken(context).length() <= 1)
         {
             Intent login_intent = new Intent(this, LoginActivity.class);
             startActivity(login_intent);
             this.finish();
         }
-
     }
 
-    private boolean checkIfTokenExists()
+    private void logout()
     {
-        return UserSession.getToken(context).length() > 1;
+        UserSession.clearSession(context);
+        checkIfTokenExists();
     }
 
 }
