@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -22,9 +23,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.justlearn.justlearn.MainActivity;
 import com.justlearn.justlearn.R;
 import com.justlearn.justlearn.ui.login.LoginViewModel;
 import com.justlearn.justlearn.ui.login.LoginViewModelFactory;
+import com.justlearn.justlearn.utils.UserSession;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
+
+
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -73,7 +78,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 setResult(Activity.RESULT_OK);
 
+                UserSession userSession = new UserSession();
+                userSession.setToken("TESTING");
+                userSession.saveUserSession(getApplicationContext());
+
                 //Complete and destroy login activity once successful
+                Intent login_intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(login_intent);
                 finish();
             }
         });
@@ -117,6 +128,8 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
+
+        getSupportActionBar().hide();
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
